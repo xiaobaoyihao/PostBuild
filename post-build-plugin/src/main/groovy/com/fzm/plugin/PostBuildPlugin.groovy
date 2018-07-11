@@ -32,8 +32,7 @@ class PostBuildPlugin implements Plugin<Project> {
 //            println('=====name:'+name+" email:"+email)
 
 
-            project.assembleRelease.doLast {
-
+            project.task('upload',{
 
 
                 def jenkinsJobName = System.getenv('JOB_NAME') ?: "local_job"
@@ -51,6 +50,11 @@ class PostBuildPlugin implements Plugin<Project> {
 
                 def fileBackPath = project.rootProject.ext.configProps.JENKINS_FILE_BACK_DIR+"/"+ jenkinsJobName + "/" + jenkinsBuild
 
+                println("==========jenkinsJobName:"+jenkinsJobName+"===========")
+                println("==========jenkinsBuild:"+jenkinsBuild+"===========")
+                println("==========vName:"+vName+"===========")
+                println("==========shouldUpload:"+shouldUpload+"===========")
+                println("==========fileBackPath:"+fileBackPath+"===========")
 
                 println("==========begain copy apk file===========")
 
@@ -108,7 +112,9 @@ class PostBuildPlugin implements Plugin<Project> {
                 } else {
                     println('==========no need upload file==========')
                 }
-            }
+
+
+            })
 
         }
 
