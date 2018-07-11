@@ -9,9 +9,9 @@ class PostBuildPlugin implements Plugin<Project> {
     void apply(Project project) {
 
 
-        project.extensions.create('post_build', PostBuildExtension)
+        project.extensions.create('postBuildConfig', PostBuildExtension)
 
-        project.task('post_build_task') {
+        project.task('uploadAndSendEmail') {
 
             doLast {
                 println "hello plugin"
@@ -25,27 +25,27 @@ class PostBuildPlugin implements Plugin<Project> {
 
 
             if (!project.android) {
-                throw new IllegalStateException('Must apply \'com.android.application\' or \'com.android.library\' frist !')
+                throw new IllegalStateException('Must apply \'com.android.application\' or \'com.android.library\' first !')
             }
 
-            if (project.postBuild.name == null
-                    || project.postBuild.email == null) {
-                project.logger.info('postBuild config should be set !')
+            if (project.postBuildConfig.name == null
+                    || project.postBuildConfig.email == null) {
+                project.logger.info('postBuildConfig must be set !')
 
                 return
             }
 
-            name = project.postBuild.name
-            email = project.postBuild.emal
+            name = project.postBuildConfig.name
+            email = project.postBuildConfig.email
 
 
             println('=====name:'+name+" email:"+email)
 
 
-//            assembleRelease.doLast{
-//
-//                print('assemble Release doLast')
-//            }
+            project.assembleRelease.doLast{
+
+                print('assemble Release doLast')
+            }
 
         }
 
