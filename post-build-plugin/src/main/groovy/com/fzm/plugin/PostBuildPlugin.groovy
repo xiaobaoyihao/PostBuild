@@ -2,59 +2,38 @@ package com.fzm.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 
 class PostBuildPlugin implements Plugin<Project> {
 
     void apply(Project project) {
 
-
 //        project.extensions.create('postBuildConfig', PostBuildExtension)
 
-        println('=== apply method =====')
+        Task uploadTask = project.task('upload') {
 
-        project.afterEvaluate {
-
-            if (!project.android) {
-                throw new IllegalStateException('Must apply \'com.android.application\' or \'com.android.library\' first !')
-            }
-
-//            if (project.postBuildConfig.name == null
-//                    || project.postBuildConfig.email == null) {
-//                project.logger.info('postBuildConfig must be set !')
-//
-//                return
-//            }
-
-//            def name = project.postBuildConfig.name
-//            def email = project.postBuildConfig.email
-//
-//
-//            println('=====name:'+name+" email:"+email)
-
-
-            project.task('upload',{
-
+            doLast {
 
                 def jenkinsJobName = System.getenv('JOB_NAME') ?: "local_job"
                 def jenkinsBuild = System.getenv('BUILD_NUMBER') ?: "0"
 
-                def vName = project.getProperties().get('vName',project.rootProject.ext.configProps.DEFAULT_VERSION_NAME)
+                def vName = project.getProperties().get('vName', project.rootProject.ext.configProps.DEFAULT_VERSION_NAME)
                 def shouldUpload = project.getProperties().get('shouldUpload', false)
 
                 //判断是否需要执行拷贝文件，如果不是jenkins上build直接返回
-                if(jenkinsJobName != 'local_job'){
+                if (jenkinsJobName != 'local_job') {
                     //do nothing
                     return
                 }
 
 
-                def fileBackPath = project.rootProject.ext.configProps.JENKINS_FILE_BACK_DIR+"/"+ jenkinsJobName + "/" + jenkinsBuild
+                def fileBackPath = project.rootProject.ext.configProps.JENKINS_FILE_BACK_DIR + "/" + jenkinsJobName + "/" + jenkinsBuild
 
-                println("==========jenkinsJobName:"+jenkinsJobName+"===========")
-                println("==========jenkinsBuild:"+jenkinsBuild+"===========")
-                println("==========vName:"+vName+"===========")
-                println("==========shouldUpload:"+shouldUpload+"===========")
-                println("==========fileBackPath:"+fileBackPath+"===========")
+                println("==========jenkinsJobName" + jenkinsJobName + "===========")
+                println("==========jenkinsBuild:" + jenkinsBuild + "===========")
+                println("==========vName:" + vName + "===========")
+                println("==========shouldUpload:" + shouldUpload + "===========")
+                println("==========fileBackPath:" + fileBackPath + "===========")
 
                 println("==========begain copy apk file===========")
 
@@ -78,15 +57,19 @@ class PostBuildPlugin implements Plugin<Project> {
 
 
 
-                println("shouldUpload;"+shouldUpload)
+                println("shouldUpload;" + shouldUpload)
 
                 if (shouldUpload == "true") {
                     println('==========begin execute upload file task==========')
 
-//                    String pythonScriptPath = "${project.rootDir.getAbsolutePath()}/app/upload.py"
-                    String pythonScriptPath = "upload.py"
-                    println('cmd:'+pythonScriptPath)
-//                    return;
+                    String pythonScriptPath = "${project.rootDir.getAbsolutePath()}/upload.py"
+
+//                    String currentPath = getClass().protectionDomain.codeSource.location.path
+
+//                    String pythonScriptPath = "./upload.py"
+                    println('cmd:' + pythonScriptPath)
+//                    println('current path:'+pythonScriptPath)
+
                     String[] cmd = new String[3];
                     cmd[0] = "python"; // check version of installed python: python -V
                     cmd[1] = pythonScriptPath
@@ -98,14 +81,14 @@ class PostBuildPlugin implements Plugin<Project> {
 
                     // retrieve output from python script
                     BufferedReader bfr = null;
-                    try{
+                    try {
                         bfr = new BufferedReader(new InputStreamReader(pr.getInputStream()));
                         String line = ""
-                        while((line = bfr.readLine()) != null) {
+                        while ((line = bfr.readLine()) != null) {
                             // display each output line form python script
                             println(line)
                         }
-                    }finally {
+                    } finally {
                         bfr.close()
                     }
 
@@ -113,10 +96,10 @@ class PostBuildPlugin implements Plugin<Project> {
                     println('==========no need upload file==========')
                 }
 
-
-            })
-
+            }
         }
+
+        uploadTask.dependsOn('assembleRelease')
 
     }
 }
