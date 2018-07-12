@@ -21,7 +21,7 @@ dependencies {
 
 // Unless overridden in the pluginBundle config DSL, the project version will
 // be used as your plugin version when publishing
-version = "1.0.16"
+version = "1.0.17"
 group = "com.fzm.post.build"
 
 // The configuration example below shows the minimum required properties
