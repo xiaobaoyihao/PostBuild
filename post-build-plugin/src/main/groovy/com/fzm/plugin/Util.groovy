@@ -8,7 +8,9 @@ import javax.mail.internet.*
 
 class Util {
 
-    private static String sRootDirPath;
+    private static String sRootDirPath
+
+    public static boolean sIsTest = false
 
 
     static void upload(File rootDir) throws Exception {
@@ -18,10 +20,14 @@ class Util {
         }
 
         def jenkinsBuildNumber = System.getenv('BUILD_NUMBER')
-//        jenkinsBuildNumber = '31'
+        if (sIsTest) {
+            jenkinsBuildNumber = '31'
+        }
 
         def jenkinsWorkspace = System.getenv('WORKSPACE')
-//        jenkinsWorkspace = '/Users/dingbaosheng/work/fzm/projects/android-test-demo'
+        if (sIsTest) {
+            jenkinsWorkspace = '/Users/dingbaosheng/work/fzm/projects/android-test-demo'
+        }
 
         def gitLog = System.getenv('SCM_CHANGELOG')
         println('=======gitLog:' + gitLog + "===========")
@@ -160,7 +166,7 @@ class Util {
         }
     }
 
-    private static void sendEmail(String appVerion) {
+    private static void sendEmail(String appVersion) {
 
         // load config.json
         def configFile = new File(sRootDirPath + File.separator + 'config.json')
@@ -200,7 +206,7 @@ class Util {
         println('==========处理后的git_log:' + git_log + "==========")
 
         def app_download_url = configJson.upload.appFirImDownloadUrl
-        def app_version = appVerion
+        def app_version = appVersion
 
         println('==========appVersion' + app_version + '==========')
         def apiUrl = configJson.upload.apiUrl
@@ -214,10 +220,14 @@ class Util {
         }
 
         def jenkins_build_number = System.getenv('BUILD_NUMBER')
-        jenkins_build_number = '12'
+        if (sIsTest) {
+            jenkins_build_number = '12'
+        }
 
         def jenkins_job_name = System.getenv('JOB_NAME')
-        jenkins_job_name = 'job_name'
+        if (sIsTest) {
+            jenkins_job_name = 'job_name'
+        }
 
         //http://192.168.33.132:8080/download/
         def local_download_url = "http://" +     \
@@ -277,7 +287,7 @@ class Util {
 
             //设置发送信息主题.信息正文
             message.setSubject(subject)
-            message.setContent(email_content, "text/html;charset=gbk")
+            message.setContent(email_content, "text/html;charset=utf-8")
 
             //发送信息
             Transport.send(message)

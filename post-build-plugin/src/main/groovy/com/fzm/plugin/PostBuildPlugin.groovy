@@ -5,8 +5,8 @@ import org.gradle.api.Project
 
 class PostBuildPlugin implements Plugin<Project> {
 
-    def backFileRootDir = "/home/qwe/shared/"
-//    def backFileRootDir = "/Users/dingbaosheng/shared/"
+//    def backFileRootDir =
+    def backFileRootDir = Util.sIsTest ? "/Users/dingbaosheng/shared/" : "/home/qwe/shared/"
 
     void apply(Project project) {
 
@@ -26,11 +26,12 @@ class PostBuildPlugin implements Plugin<Project> {
                     def shouldUpload = project.getProperties().get('shouldUpload', false)
 
                     //判断是否需要执行拷贝文件，如果不是jenkins上build直接返回
-                    if (jenkinsJobName == 'local_job') {
-                        //do nothing
-                        return
+                    if (!Util.sIsTest) {
+                        if (jenkinsJobName == 'local_job') {
+                            //do nothing
+                            return
+                        }
                     }
-
 
                     def fileBackPath = backFileRootDir + project.rootProject.ext.config.upload.jenkinsFileBackDir + File.separator + jenkinsJobName + File.separator + jenkinsBuild
 
@@ -67,11 +68,12 @@ class PostBuildPlugin implements Plugin<Project> {
                     def shouldUpload = project.getProperties().get('shouldUpload', false)
 
                     //判断是否需要执行拷贝文件，如果不是jenkins上build直接返回
-                    if (jenkinsJobName == 'local_job') {
-                        //do nothing
-                        return
+                    if (!Util.sIsTest) {
+                        if (jenkinsJobName == 'local_job') {
+                            //do nothing
+                            return
+                        }
                     }
-
 
                     def fileBackPath = backFileRootDir + project.rootProject.ext.config.upload.jenkinsFileBackDir + File.separator + jenkinsJobName + File.separator + jenkinsBuild
 
@@ -109,9 +111,8 @@ class PostBuildPlugin implements Plugin<Project> {
                         println('==========begin execute upload file task==========')
 
                         try {
-
                             Util.upload(project.rootDir)
-                        }catch (Exception e) {
+                        } catch (Exception e) {
                             println("upload fails :" + e.getMessage())
                         }
 
