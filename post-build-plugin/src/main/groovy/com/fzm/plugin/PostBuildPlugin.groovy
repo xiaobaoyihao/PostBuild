@@ -41,16 +41,14 @@ class PostBuildPlugin implements Plugin<Project> {
                     println("==========shouldUpload:" + shouldUpload + "===========")
                     println("==========fileBackPath:" + fileBackPath + "===========")
 
-                    println("==========begain copy apk file===========")
+                    println("==========start copy  file===========")
 
                     project.copy {
-                        from('build/outputs/apk/debug')
-                        into(fileBackPath + '/apks')
-                        include('*.apk', '*.txt')
-                        exclude('**/*-unaligined.apk')
+                        from('build/outputs')
+                        into(fileBackPath + '/outputs')
                     }
 //
-                    println("==========end copy apk file===========")
+                    println("==========end copy file===========")
 
                 }
             } else if (task.getName() == "assembleRelease") {
@@ -83,25 +81,14 @@ class PostBuildPlugin implements Plugin<Project> {
                     println("==========shouldUpload:" + shouldUpload + "===========")
                     println("==========fileBackPath:" + fileBackPath + "===========")
 
-                    println("==========begain copy apk file===========")
+                    println("==========begain copy file===========")
 
                     project.copy {
-                        from('build/outputs/apk/release')
-                        into(fileBackPath + '/apks')
-                        include('*.apk', '*.txt')
-                        exclude('**/*-unaligined.apk')
+                        from('build/outputs')
+                        into(fileBackPath + '/outputs')
                     }
 //
-                    println("==========end copy apk file===========")
-
-
-                    println("==========begain copy mapping file===========")
-                    project.copy {
-                        from('build/outputs/mapping/release')
-                        into(fileBackPath + '/apks/mapping')
-                        include('*.txt')
-                    }
-                    println("==========end copy mapping file===========")
+                    println("==========end copy file===========")
 
 
 
