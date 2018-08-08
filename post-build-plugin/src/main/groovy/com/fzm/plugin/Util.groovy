@@ -236,7 +236,7 @@ class Util {
                          configJson.upload.jenkinsFileBackDir +     \
                          "/" + jenkins_job_name +     \
                          "/" + jenkins_build_number +     \
-                         "/apks"
+                         "/outputs"
 
         //local_download_url = "http://192.168.33.132:8080/download/"
 
