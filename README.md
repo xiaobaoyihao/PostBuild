@@ -1,6 +1,6 @@
 # PostBuild
 
-一个自动打包并上传到公测平台并发送邮件通知对应的插件
+一个自动打包上传到公测平台并发送邮件通知关联方的插件
 
 ## 集成
 
@@ -29,7 +29,7 @@ rootProject.ext.config = config
 ```groovy
 //add
 plugins {
-    id 'com.fzm.post.build.plugin' version '1.1.3'
+    id 'com.fzm.post.build.plugin' version '1.1.5'
 }
 ```
 应用插件
@@ -69,6 +69,23 @@ plugins {
   }
 }
 ```
+**字段说明**
 
-
+Field | Desc | Example
+---|---|---
+versionCode | 版本Code | 10000
+versionName	|版本号|	1.0.0.0
+applicatonId |	app包名	|com.fzm.test.demo
+apiToken	|fir.im平台的apiToken	|xxxx
+appName	|fir.im平台上应用对应的名称	|P钱包新版
+apkPath	|apk包存储路径	|/app/build/outputs/apk/release/app-release.apk
+senderName	|发件人姓名	|
+senderEmail	|发件人邮箱	|dbs@33.cn
+senderEmailPwd	|邮箱密码
+subject	|邮件主题	|Android App测试包有更新
+appFirImDownloadUrl	|fir.im短链地址	|https://fir.im/xxxx
+apiUrl	|API URL	|xxx
+receiverEmails	|收件人邮箱
+jenkinsServerIP	|jenkins IP|	无需修改，除非ip改变了
+jenkinsFileBackDir|	jenkins备份文件目录|	android-build (android的不要修改，此处是统一存放android的文件)
 
